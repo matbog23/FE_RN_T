@@ -10,10 +10,11 @@ import { ThemedView } from '@/components/ThemedView';
 export default function TabTwoScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
+      headerBackgroundColor={{ light: '#D0D0D0', dark: '#FF0000' }}
+      /*headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>*/
+      headerImage={<Image source={require('@/assets/images/walkingTroughGrass.jpg')} style={styles.headerImage}/>}>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title" style={{ fontFamily: 'SpaceGrotesk'}}>Explore</ThemedText>
       </ThemedView>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
@@ -50,7 +51,7 @@ export default function TabTwoScreen() {
       <Collapsible title="Custom fonts">
         <ThemedText>
           Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
+          <ThemedText style={{ fontFamily: 'SpaceGrotesk' }}>
             custom fonts such as this one.
           </ThemedText>
         </ThemedText>
@@ -90,10 +91,12 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
   headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
+    color: '#FF0000',
     position: 'absolute',
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+
   },
   titleContainer: {
     flexDirection: 'row',

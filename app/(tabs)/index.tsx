@@ -1,51 +1,70 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, ScrollView } from 'react-native';
+import { Image } from 'expo-image';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import FoodCard from '@/components/FoodCard';
+import { ExternalLink } from '@/components/ExternalLink';
 
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#A1CEDC', dark: '#FF0000' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require('@/assets/images/Tomatoes.jpg')}
+          style={styles.headerImage}
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title"  style={{ fontFamily: 'SpaceGrotesk' }}>Welcome, Jon!</ThemedText>
         <HelloWave />
       </ThemedView>
+      <ThemedText type="tagline">{Platform.select({ ios: "We noticed you're using an ios device", android: "We noticed you're using an android device" , web: "We noticed you're on the web"})} btw!</ThemedText>
+      <ThemedText type="subtitle">Popular</ThemedText>
+      <ThemedText type="defaultSemiBold">Most popular restaurants</ThemedText>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+
+          <FoodCard 
+            imageUrl="../../assets/images/Lobster.jpg"
+            title="Lobsterman Antwerp"
+            subtitle="96% like"
+          />
+          <FoodCard
+            imageUrl="../../assets/images/Oysters.jpg"
+            title="Oesterput"
+            subtitle="93% like"
+            />
+          <FoodCard 
+            imageUrl="../../assets/images/Meal.jpg"
+            title="Fiera"
+            subtitle="87% like"
+          />
+
+          </ScrollView>
+            
+      
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+        <ThemedText type="subtitle">Recommended</ThemedText>
+          <ThemedText type="defaultSemiBold">Highest rated restaurants</ThemedText>
+          <FoodCard 
+            imageUrl="../../assets/images/Lobster.jpg"
+            title="Lobsterman Antwerp"
+            subtitle="96% like"
+          />
+          <FoodCard 
+            imageUrl="../../assets/images/Oysters.jpg"
+            title="Oesterput"
+            subtitle="93% like"
+          />
+          <FoodCard 
+            imageUrl="../../assets/images/Meal.jpg"
+            title="Fiera"
+            subtitle="87% like"
+          />
+        </ThemedView>
     </ParallaxScrollView>
   );
 }
@@ -60,11 +79,9 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  headerImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
 });
