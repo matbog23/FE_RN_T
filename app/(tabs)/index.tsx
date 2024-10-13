@@ -1,14 +1,25 @@
-import { StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Platform, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
-
+/*import useMessages from '@/data/messages.js';*/
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import FoodCard from '@/components/FoodCard';
-import { ExternalLink } from '@/components/ExternalLink';
 
 export default function HomeScreen() {
+  /*const {data, isLoading, isError} = useMessages();
+
+  console.log(data);
+
+  if (isLoading) {
+    return <ThemedText>Loading...</ThemedText>;
+  }
+
+  if (isError) {
+    return <ThemedText>An error has occured.</ThemedText>;
+  }*/
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#FF0000' }}
