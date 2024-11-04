@@ -1,5 +1,6 @@
 import { View, SafeAreaView, StyleSheet, Platform, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 /*import useMessages from '@/data/messages.js';*/
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -31,6 +32,7 @@ export default function HomeScreen() {
       }>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title"  style={{ fontFamily: 'SpaceGrotesk' }}>Welcome, Jon!</ThemedText>
+        
         <HelloWave />
       </ThemedView>
       <ThemedText type="tagline">{Platform.select({ ios: "We noticed you're using an ios device", android: "We noticed you're using an android device" , web: "We noticed you're on the web"})} btw!</ThemedText>
@@ -39,19 +41,22 @@ export default function HomeScreen() {
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
 
           <FoodCard 
-            imageUrl="../../assets/images/Lobster.jpg"
+            imageUrl={require("@/assets/images/Lobster.jpg")}
             title="Lobsterman Antwerp"
             subtitle="96% like"
+            href="details"
           />
           <FoodCard
-            imageUrl="../../assets/images/Oysters.jpg"
+            imageUrl={require("@/assets/images/Oysters.jpg")}
             title="Oesterput"
             subtitle="93% like"
+            href="details"
             />
           <FoodCard 
-            imageUrl="../../assets/images/Meal.jpg"
+            imageUrl={require("@/assets/images/Meal.jpg")}
             title="Fiera"
             subtitle="87% like"
+            href="details"
           />
 
           </ScrollView>
@@ -61,19 +66,22 @@ export default function HomeScreen() {
         <ThemedText type="subtitle">Recommended</ThemedText>
           <ThemedText type="defaultSemiBold">Highest rated restaurants</ThemedText>
           <FoodCard 
-            imageUrl="../../assets/images/Lobster.jpg"
+            imageUrl={require("@/assets/images/Lobster.jpg")}
             title="Lobsterman Antwerp"
             subtitle="96% like"
+            href="details"
           />
           <FoodCard 
-            imageUrl="../../assets/images/Oysters.jpg"
+            imageUrl={require("@/assets/images/Oysters.jpg")}
             title="Oesterput"
             subtitle="93% like"
+            href="details"
           />
           <FoodCard 
-            imageUrl="../../assets/images/Meal.jpg"
+            imageUrl={require("@/assets/images/Meal.jpg")}
             title="Fiera"
             subtitle="87% like"
+            href="details"
           />
         </ThemedView>
     </ParallaxScrollView>
