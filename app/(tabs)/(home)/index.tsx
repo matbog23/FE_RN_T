@@ -1,7 +1,7 @@
 import { View, SafeAreaView, StyleSheet, Platform, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-/*import useMessages from '@/data/messages.js';*/
+import useMessages from '@/data/messages.js';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -9,17 +9,17 @@ import { ThemedView } from '@/components/ThemedView';
 import FoodCard from '@/components/FoodCard';
 
 export default function HomeScreen() {
-  /*const {data, isLoading, isError} = useMessages();
+  const {data, isLoading, isError} = useMessages();
 
   console.log(data);
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <ThemedText>Loading...</ThemedText>;
   }
 
   if (isError) {
     return <ThemedText>An error has occured.</ThemedText>;
-  }*/
+  }
 
   return (
     <ParallaxScrollView
