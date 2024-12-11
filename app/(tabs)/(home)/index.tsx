@@ -1,24 +1,49 @@
-import { View, SafeAreaView, StyleSheet, Platform, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, TextInput } from 'react-native';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
-import useMessages from '@/data/messages.js';
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import useRestaurantGet from '@/data/restaurant-get';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import FoodCard from '@/components/FoodCard';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { HelloWave } from '@/components/HelloWave';
+import Fuse from 'fuse.js';
+
+const TAGS = ['All', 'Meat', 'Vegan', 'Popular'];
+
+// Hardcoded images to assign to restaurants
+const HARDCODED_IMAGES = [
+  require('@/assets/images/Lobster.jpg'),
+  require('@/assets/images/Oysters.jpg'),
+  require('@/assets/images/Meal.jpg'),
+  require('@/assets/images/Tomatoes.jpg'), // Add more images as needed
+];
 
 export default function HomeScreen() {
-  const {data, isLoading, isError} = useMessages();
+  const { data: restaurants, isLoading, isError } = useRestaurantGet();
+  const [selectedTag, setSelectedTag] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  console.log(data);
+  // Fuzzy search setup using Fuse.js
+  const fuse = new Fuse(restaurants || [], {
+    keys: ['name', 'cuisine', 'location.city'], // Specify fields to search
+    threshold: 0.4, // Adjust for tolerance to typos
+  });
 
-  if (isLoading || !data) {
+  // Filter restaurants based on tag and search query
+  const filteredRestaurants = (searchQuery
+    ? fuse.search(searchQuery).map((result) => result.item)
+    : restaurants
+  )?.filter(
+    (restaurant: any) => selectedTag === 'All' || restaurant.tags?.includes(selectedTag)
+  );
+
+  if (isLoading || !restaurants) {
     return <ThemedText>Loading...</ThemedText>;
   }
 
   if (isError) {
-    return <ThemedText>An error has occured.</ThemedText>;
+    return <ThemedText>An error has occurred.</ThemedText>;
   }
 
   return (
@@ -29,61 +54,50 @@ export default function HomeScreen() {
           source={require('@/assets/images/Tomatoes.jpg')}
           style={styles.headerImage}
         />
-      }>
+      }
+    >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title"  style={{ fontFamily: 'SpaceGrotesk' }}>Welcome, Jon!</ThemedText>
-        
+        <ThemedText type="title" style={{ fontFamily: 'SpaceGrotesk' }}>
+          Welcome, {restaurants[0]?.username || 'Guest'}!
+        </ThemedText>
         <HelloWave />
       </ThemedView>
-      <ThemedText type="tagline">{Platform.select({ ios: "We noticed you're using an ios device", android: "We noticed you're using an android device" , web: "We noticed you're on the web"})} btw!</ThemedText>
-      <ThemedText type="subtitle">Popular</ThemedText>
-      <ThemedText type="defaultSemiBold">Most popular restaurants</ThemedText>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
 
-          <FoodCard 
-            imageUrl={require("@/assets/images/Lobster.jpg")}
-            title="Lobsterman Antwerp"
-            subtitle="96% like"
-            href="details"
-          />
-          <FoodCard
-            imageUrl={require("@/assets/images/Oysters.jpg")}
-            title="Oesterput"
-            subtitle="93% like"
-            href="details"
-            />
-          <FoodCard 
-            imageUrl={require("@/assets/images/Meal.jpg")}
-            title="Fiera"
-            subtitle="87% like"
-            href="details"
-          />
-
-          </ScrollView>
-            
+      <ThemedText type="title">Discover</ThemedText>
       
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Recommended</ThemedText>
-          <ThemedText type="defaultSemiBold">Highest rated restaurants</ThemedText>
-          <FoodCard 
-            imageUrl={require("@/assets/images/Lobster.jpg")}
-            title="Lobsterman Antwerp"
-            subtitle="96% like"
-            href="details"
-          />
-          <FoodCard 
-            imageUrl={require("@/assets/images/Oysters.jpg")}
-            title="Oesterput"
-            subtitle="93% like"
-            href="details"
-          />
-          <FoodCard 
-            imageUrl={require("@/assets/images/Meal.jpg")}
-            title="Fiera"
-            subtitle="87% like"
-            href="details"
-          />
-        </ThemedView>
+      {/* Search Bar */}
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search restaurants..."
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+      />
+
+      {/* Tag Selector */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tagContainer}>
+        {TAGS.map((tag) => (
+          <TouchableOpacity
+            key={tag}
+            style={[styles.tag, selectedTag === tag && styles.selectedTag]}
+            onPress={() => setSelectedTag(tag)}
+          >
+            <Text style={[styles.tagText, selectedTag === tag && styles.selectedTagText]}>
+              {tag}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Highlighted Food Cards */}
+      {filteredRestaurants?.map((restaurant: any, index: any) => (
+        <FoodCard
+          key={restaurant._id}
+          imageUrl={HARDCODED_IMAGES[index % HARDCODED_IMAGES.length]} // Assign hardcoded images
+          title={restaurant.name}
+          subtitle={`${restaurant.cuisine} - ${restaurant.location.city}`}
+          href="details" // Update if dynamic routes are implemented
+        />
+      ))}
     </ParallaxScrollView>
   );
 }
@@ -92,15 +106,44 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    paddingTop: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  cardsContainer: {
+    gap: 2,
+    marginBottom: 2,
   },
   headerImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+  },
+  searchBar: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  tagContainer: {
+    marginVertical: 10,
+    paddingHorizontal: 10,
+  },
+  tag: {
+    padding: 8,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+  },
+  selectedTag: {
+    backgroundColor: '#FFE3CE',
+  },
+  tagText: {
+    color: '#000',
+    fontSize: 14,
+  },
+  selectedTagText: {
+    color: '#DF6800',
+    fontWeight: 'bold',
   },
 });

@@ -11,10 +11,12 @@ import useUserPut from '@/data/user-put';
 
 export default function TabTwoScreen() {
   const params = useLocalSearchParams();
+
+  console.log("params: ", params);
   
   const {data, isLoading, isError} = useUserGet(params.userId);
   const {trigger, isMutating} = useUserPut(params.userId);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     if (data) {

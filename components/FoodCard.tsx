@@ -1,7 +1,13 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity  } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
+//import { LinearGradient } from 'expo-linear-gradient';
+/*<LinearGradient colors={['transparent', 'rgba(0, 0, 0, 0.5)']} style={styles.textContainer}>
+    <Text style={styles.title}>{title}</Text>
+      <Text style={styles.subtitle}>{subtitle}</Text>
+  </LinearGradient>
+*/
 
 interface FoodCardProps {
   imageUrl: any;  // URL of the image
@@ -24,12 +30,14 @@ const FoodCard: React.FC<FoodCardProps> = ({ imageUrl, title, subtitle, href }) 
   };
   return (
     <TouchableOpacity onPress={handlePress} style={styles.cardContainer}>
-      <Image source={imageUrl} style={styles.image} />
-      
+      <ImageBackground source={imageUrl} style={styles.image}>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subtitle}>{subtitle}</Text>
+        
       </View>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };
@@ -44,25 +52,31 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    margin: 10,
+    margin: 8,
     minWidth: 240,
     width: 'auto',
+    position: 'relative',
   },
   image: {
     width: '100%',
-    height: 150,
+    height: 240,
     resizeMode: 'cover',
   },
   textContainer: {
     padding: 10,
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width: '100%',
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: 'white',
   },
   subtitle: {
     fontSize: 14,
-    color: 'gray',
+    color:'#fff' 
   },
 });
 
