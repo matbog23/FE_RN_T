@@ -3,10 +3,8 @@ import { View, StyleSheet, ScrollView, TouchableOpacity, Text, TextInput } from 
 import { Image } from 'expo-image';
 import useRestaurantGet from '@/data/restaurant-get';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import FoodCard from '@/components/FoodCard';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { HelloWave } from '@/components/HelloWave';
 import Fuse from 'fuse.js';
 
 const TAGS = ['All', 'Meat', 'Vegan', 'Popular'];
@@ -30,13 +28,16 @@ export default function HomeScreen() {
     threshold: 0.4, // Adjust for tolerance to typos
   });
 
-  // Filter restaurants based on tag and search query
+  console.log('Restaurant Data:', restaurants);
+
+  // Filter restaurants based on search query and tag
   const filteredRestaurants = (searchQuery
-    ? fuse.search(searchQuery).map((result) => result.item)
-    : restaurants
-  )?.filter(
-    (restaurant: any) => selectedTag === 'All' || restaurant.tags?.includes(selectedTag)
-  );
+    ? fuse.search(searchQuery).map((result) => result.item) // Apply fuzzy search first
+    : restaurants // No search query, use all restaurants
+  )?.filter((restaurant: any) => {
+    // Filter by selected tag
+    return selectedTag === 'All' || restaurant.tags?.includes(selectedTag);
+  });
 
   if (isLoading || !restaurants) {
     return <ThemedText>Loading...</ThemedText>;
@@ -56,12 +57,6 @@ export default function HomeScreen() {
         />
       }
     >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={{ fontFamily: 'SpaceGrotesk' }}>
-          Welcome, {restaurants[0]?.username || 'Guest'}!
-        </ThemedText>
-        <HelloWave />
-      </ThemedView>
 
       <ThemedText type="title">Discover</ThemedText>
       
@@ -89,15 +84,21 @@ export default function HomeScreen() {
       </ScrollView>
 
       {/* Highlighted Food Cards */}
-      {filteredRestaurants?.map((restaurant: any, index: any) => (
-        <FoodCard
-          key={restaurant._id}
-          imageUrl={HARDCODED_IMAGES[index % HARDCODED_IMAGES.length]} // Assign hardcoded images
-          title={restaurant.name}
-          subtitle={`${restaurant.cuisine} - ${restaurant.location.city}`}
-          href="details" // Update if dynamic routes are implemented
-        />
-      ))}
+      {filteredRestaurants?.length > 0 ? (
+        filteredRestaurants.map((restaurant: any, index: any) => (
+          <FoodCard
+            key={restaurant._id}
+            imageUrl={HARDCODED_IMAGES[index % HARDCODED_IMAGES.length]} // Assign hardcoded images
+            title={restaurant.name}
+            subtitle={`${restaurant.cuisine} - ${restaurant.location.city}`}
+            restaurant={restaurant} // Pass the entire restaurant object
+          />
+
+
+        ))
+      ) : (
+        <ThemedText>No restaurants found.</ThemedText>
+      )}
     </ParallaxScrollView>
   );
 }

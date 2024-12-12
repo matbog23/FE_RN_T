@@ -1,42 +1,30 @@
 import React from 'react';
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity  } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import * as Linking from 'expo-linking';
-//import { LinearGradient } from 'expo-linear-gradient';
-/*<LinearGradient colors={['transparent', 'rgba(0, 0, 0, 0.5)']} style={styles.textContainer}>
-    <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
-  </LinearGradient>
-*/
 
+// Define the prop types for the FoodCard component
 interface FoodCardProps {
   imageUrl: any;  // URL of the image
   title: string;     // Title of the card (e.g., food name)
-  subtitle: string;  // Subtitle (e.g., like percentage)
-  href: string;     // URL to navigate to (either internal route or external URL)
+  subtitle: string;  // Subtitle (e.g., like cuisine and city)
+  restaurant: any; // Pass the entire restaurant object
 }
 
-const FoodCard: React.FC<FoodCardProps> = ({ imageUrl, title, subtitle, href }) => {
+const FoodCard: React.FC<FoodCardProps> = ({ imageUrl, title, subtitle, restaurant }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    if (href.startsWith('http') || href.startsWith('https')) {
-      // Open external link
-      Linking.openURL(href).catch(err => console.error("Failed to open URL:", err));
-    } else {
-      // Navigate to an internal screen
-      navigation.navigate(href as never); // Ensure your `href` value is a valid route name
-    }
+    // Navigate to the details screen with the restaurant object as a parameter
+    navigation.navigate('details', { restaurant }); // Ensure 'restaurant' is being passed
   };
+
   return (
     <TouchableOpacity onPress={handlePress} style={styles.cardContainer}>
       <ImageBackground source={imageUrl} style={styles.image}>
-      <View style={styles.textContainer}>
-        
+        <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
-        
-      </View>
+        </View>
       </ImageBackground>
     </TouchableOpacity>
   );
@@ -76,7 +64,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color:'#fff' 
+    color: '#fff',
   },
 });
 
