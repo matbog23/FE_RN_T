@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
-import useReviews from '@/data/messages'; // Adjust the path as necessary
+import useReviews from '@/data/review-get';
 
 type RestaurantDetailsRouteParams = {
   restaurant: {
@@ -64,12 +64,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#FFF',
   },
   subtitle: {
     fontSize: 18,
     marginBottom: 10,
+    color: '#FFF',
   },
   body: {
+    color: '#FFF',
     fontSize: 16,
     marginBottom: 10,
   },
@@ -78,14 +81,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
+    color: '#FFF',
   },
   review: {
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    color: '#FFF',
   },
   reviewText: {
     fontSize: 16,
+    color: '#FFF',
   },
   reviewSender: {
     fontSize: 14,

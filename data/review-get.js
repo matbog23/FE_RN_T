@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { API_URL } from '@/constants/Api'
 
 export default function useReviews (restaurantId) {
-  const { data, error, isLoading } = useSWR(restaurantId ? `${API_URL}/messages/restaurant/${restaurantId}` : null, fetcher)
+  const { data, error, isLoading } = useSWR(restaurantId ? `${API_URL}/reviews/restaurant/${restaurantId}` : null, fetcher)
  
   return {
     data,
