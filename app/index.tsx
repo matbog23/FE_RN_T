@@ -1,7 +1,5 @@
 import { View, Alert, SafeAreaView, TouchableOpacity, Image, StyleSheet, Platform } from 'react-native';
-import { Link } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
-import useMessages from '@/data/messages';
 import { useEffect } from 'react';
 import {API_URL} from '@/constants/Api'
 import * as WebBrowser from 'expo-web-browser';

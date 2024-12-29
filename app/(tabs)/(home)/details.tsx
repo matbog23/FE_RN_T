@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
 import { useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import useReviews from '@/data/review-get';
@@ -23,8 +24,33 @@ const RestaurantDetailsScreen = () => {
 
   const { data: reviews, isLoading, isError } = useReviews(restaurant?._id);
 
+  // Debugging the reviews data
+  console.log('Reviews:', reviews);
+
+  const renderStars = (rating: any) => {
+    const fullStars = Math.floor(rating); // Number of full stars
+    const halfStar = rating % 1 !== 0; // Determine if there's a half star
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // Remaining empty stars
+
+    return (
+      <View style={styles.starsContainer}>
+        {Array(fullStars)
+          .fill(null)
+          .map((_, index) => (
+            <Icon key={`full-${index}`} name="star" size={16} color="#FFD700" />
+          ))}
+        {halfStar && <Icon name="star-half-o" size={16} color="#FFD700" />}
+        {Array(emptyStars)
+          .fill(null)
+          .map((_, index) => (
+            <Icon key={`empty-${index}`} name="star-o" size={16} color="#FFD700" />
+          ))}
+      </View>
+    );
+  };
+
   if (!restaurant) {
-    return <Text>Restaurant not found.</Text>;
+    return <Text style={styles.errorText}>Restaurant not found.</Text>;
   }
 
   return (
@@ -33,11 +59,11 @@ const RestaurantDetailsScreen = () => {
       <Text style={styles.subtitle}>{restaurant.cuisine}</Text>
       <Text style={styles.body}>{restaurant.location.address}</Text>
       <Text style={styles.body}>{restaurant.location.city}</Text>
-      <Text style={styles.body}>Tags: {restaurant.tags.join(', ')}</Text>
+      <Text style={styles.body}>Tags: {restaurant.tags?.join(', ') || 'No tags available'}</Text>
 
       <Text style={styles.sectionTitle}>Reviews</Text>
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#00f" />
       ) : isError ? (
         <Text style={styles.errorText}>Failed to load reviews</Text>
       ) : (
@@ -46,8 +72,11 @@ const RestaurantDetailsScreen = () => {
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <View style={styles.review}>
-              <Text style={styles.reviewText}>{item.text}</Text>
-              <Text style={styles.reviewSender}>- {item.sender.username}</Text>
+              <Text style={styles.reviewText}>{item.comment || 'No comment available'}</Text>
+              <Text style={styles.reviewSender}>- {item.user?.username || 'Anonymous'}</Text>
+              <View style={styles.ratingContainer}>
+                {renderStars(item.rating)}
+              </View>
             </View>
           )}
         />
@@ -59,6 +88,8 @@ const RestaurantDetailsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: '#000', // Ensures proper dark mode support
+    flex: 1,
   },
   title: {
     fontSize: 24,
@@ -86,8 +117,7 @@ const styles = StyleSheet.create({
   review: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    color: '#FFF',
+    borderBottomColor: '#444', // Adjusted for better dark mode contrast
   },
   reviewText: {
     fontSize: 16,
@@ -95,12 +125,25 @@ const styles = StyleSheet.create({
   },
   reviewSender: {
     fontSize: 14,
-    color: '#555',
+    color: '#AAA', // Light gray for better readability in dark mode
   },
   errorText: {
     fontSize: 16,
-    color: 'red',
+    color: '#F66', // Softer red for dark mode
     textAlign: 'center',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  ratingText: {
+    fontSize: 14,
+    color: '#FFF',
+    marginRight: 5,
+  },
+  starsContainer: {
+    flexDirection: 'row',
   },
 });
 
