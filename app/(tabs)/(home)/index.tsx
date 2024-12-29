@@ -57,8 +57,6 @@ export default function HomeScreen() {
         />
       }
     >
-
-      <ThemedText style={styles.tagContainer} type="title">Discover</ThemedText>
       
       {/* Search Bar */}
       <TextInput
@@ -120,9 +118,9 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     padding: 10,
+    marginTop: 20,
     borderRadius: 10,
     marginHorizontal: 10,
-    marginBottom: 10,
     backgroundColor: '#000',
   },
   tagContainer: {

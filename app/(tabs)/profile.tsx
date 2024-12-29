@@ -1,26 +1,41 @@
-import { StyleSheet, Image, Platform, TextInput, Button } from 'react-native';
-import { useLocalSearchParams } from 'expo-router'
-import { Collapsible } from '@/components/Collapsible';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Image, TextInput, Switch, Button, View, Text, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useEffect, useState } from 'react';
-
 import useUserGet from '@/data/user-get';
 import useUserPut from '@/data/user-put';
 
-export default function TabTwoScreen() {
-  const params = useLocalSearchParams();
+export default function ProfileScreen() {
 
-  console.log("params: ", params);
+  const router = useRouter();
+
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userId'); // Clear stored user ID
+      router.replace('/') // Navigate to the login screen
+      console.log('logged out');
+    } catch (error) {
+      console.error('Error during logout:', error);
+      Alert.alert('Error', 'Failed to log out. Please try again.');
+    }
+  };
+
+  const params = useLocalSearchParams();
   
-  const {data, isLoading, isError} = useUserGet(params.userId);
-  const {trigger, isMutating} = useUserPut(params.userId);
+  const { data, isLoading, isError } = useUserGet(params.userId);
+  const { trigger, isMutating } = useUserPut(params.userId);
+
   const [username, setUsername] = useState('');
+  const [notifications, setNotifications] = useState(true); // Fake notifications switch
 
   useEffect(() => {
     if (data) {
-      setUsername(data.username);
+      setUsername(data.username || '');
     }
   }, [data]);
 
@@ -28,51 +43,116 @@ export default function TabTwoScreen() {
     return <ThemedText>Loading...</ThemedText>;
   }
 
-  console.log("first: ", data.username);
-  console.log("now: ", username);
+  const handleSave = () => {
+    trigger({ username }); // Save only the username
+  };
 
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#FF0000' }}
-      /*headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>*/
-      headerImage={<Image source={require('@/assets/images/walkingTroughGrass.jpg')} style={styles.headerImage}/>}>
+      headerBackgroundColor={{ light: '#A1CEDC', dark: '#FF0000' }}
+      headerImage={
+        <Image
+          source={require('@/assets/images/Tomatoes.jpg')}
+          style={styles.headerImage}
+        />
+      }
+    >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={{ fontFamily: 'SpaceGrotesk'}}>Profile</ThemedText>
+        <ThemedText type="title" style={styles.title}>Profile</ThemedText>
       </ThemedView>
-      <ThemedText type="defaultSemiBold">Hi there, Jon!</ThemedText>
-      <ThemedText type="default">Welcome to your profile. The place where we just keep talking about you and some fake settings to test my developing capababilities</ThemedText>
-      <ThemedText type='subtitle'>Settings</ThemedText>
-      <Collapsible title="Personal information">
-        <ThemedText type="defaultSemiBold">Username: </ThemedText>
-          <TextInput value={username} onChangeText={setUsername}/>
-          <Button title="Save" onPress={() => trigger({username})}/>
-        <ThemedText>
-          <ThemedText type="defaultSemiBold">Email: </ThemedText>Jon@gmail.com
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="System settings">
-        <ThemedText>
-          <ThemedText type="defaultSemiBold">mode: </ThemedText>light
-        </ThemedText>
-        <ThemedText>
-          <ThemedText type="defaultSemiBold">privacy: </ThemedText> Off
-        </ThemedText>
-      </Collapsible>
+
+      <ScrollView style={styles.container}>
+        {/* Profile Picture */}
+        <View style={styles.profilePictureContainer}>
+          <Image source={require('../../assets/images/Meal.jpg')} style={styles.profilePicture} />
+        </View>
+
+        {/* Username */}
+        <View style={styles.fieldContainer}>
+          <ThemedText style={styles.label}>Username</ThemedText>
+          <TextInput
+            value={username}
+            onChangeText={setUsername}
+            style={styles.input}
+            placeholder="Enter your username"
+          />
+        </View>
+
+        {/* Email (Non-editable) */}
+        <View style={styles.fieldContainer}>
+          <ThemedText style={styles.label}>Email</ThemedText>
+          <ThemedText style={styles.nonEditableField}>{data.email}</ThemedText>
+        </View>
+
+        {/* Notifications Toggle (Fake) */}
+        <View style={styles.fieldContainer}>
+          <ThemedText style={styles.label}>Enable Notifications</ThemedText>
+          <Switch
+            value={notifications}
+            onValueChange={setNotifications} // This won't be linked to anything
+          />
+        </View>
+
+        {/* Save and Log Out */}
+        <View style={styles.buttonContainer}>
+          <Button title="Save Changes" onPress={handleSave} />
+          <Button title="Log Out" color="#FF6347" onPress={handleLogout} />
+        </View>
+      </ScrollView>
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   headerImage: {
-    color: '#808080',
-    position: 'absolute',
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-
   },
   titleContainer: {
     flexDirection: 'row',
     gap: 8,
+    padding: 16,
+  },
+  title: {
+    fontFamily: 'SpaceGrotesk',
+    fontSize: 24,
+    color: '#FFF',
+  },
+  container: {
+    padding: 16,
+  },
+  profilePictureContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  profilePicture: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  fieldContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: '#FFF',
+    marginBottom: 5,
+  },
+  input: {
+    backgroundColor: '#222',
+    color: '#FFF',
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#444',
+  },
+  nonEditableField: {
+    color: '#AAA',
+    fontSize: 16,
+    paddingVertical: 10,
+  },
+  buttonContainer: {
+    marginTop: 20,
   },
 });
