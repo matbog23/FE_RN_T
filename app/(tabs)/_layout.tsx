@@ -39,12 +39,16 @@ export default function TabLayout() {
         headerShown: false, title: 'Home', tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ), }} />
-      <Tabs.Screen name="explore" initialParams={{ userId }} options={{
-          title: 'Explore',
+      <Tabs.Screen
+        name="addReview"
+        initialParams={{ userId }}
+        options={{
+          title: 'Add Review',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'create' : 'create-outline'} color={color} />
           ),
-        }}/>
+        }}
+      />
       <Tabs.Screen name="profile" initialParams={{ userId }} options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
