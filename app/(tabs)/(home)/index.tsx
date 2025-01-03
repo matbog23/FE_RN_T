@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, TextInput } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Text, TextInput } from 'react-native';
 import { Image } from 'expo-image';
 import useRestaurantGet from '@/data/restaurant-get';
 import { ThemedText } from '@/components/ThemedText';
 import FoodCard from '@/components/FoodCard';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import Fuse from 'fuse.js';
+import GlobalStyles from '@/constants/GlobalStyles';
+import { FontAwesome } from '@expo/vector-icons';
 
-const TAGS = ['All', 'Meat', 'Vegan', 'Popular'];
+const TAGS = ['All', 'Popular', 'Recommended', 'Fish', 'Meat', 'Vegan'];
 
 // Hardcoded images to assign to restaurants
 const HARDCODED_IMAGES = [
@@ -53,28 +55,31 @@ export default function HomeScreen() {
       headerImage={
         <Image
           source={require('@/assets/images/Tomatoes.jpg')}
-          style={styles.headerImage}
+          style={GlobalStyles.headerImage}
         />
       }
     >
-      
       {/* Search Bar */}
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search restaurants..."
-        value={searchQuery}
-        onChangeText={(text) => setSearchQuery(text)}
-      />
+      <View style={{ marginHorizontal: 16, marginTop: 20, flexDirection: 'row', alignItems: 'center', backgroundColor: '#222', borderRadius: 5, borderWidth: 1, borderColor: '#444' }}>
+        <TextInput
+          style={[GlobalStyles.cardSubtitle, { flex: 1, padding: 10, color: '#FFF' }]}
+          placeholder="Search restaurants..."
+          value={searchQuery}
+          onChangeText={(text) => setSearchQuery(text)}
+          placeholderTextColor="#888"
+        />
+        <FontAwesome name="search" size={20} color="#FFF" style={{ padding: 10 }} />
+      </View>
 
       {/* Tag Selector */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tagContainer}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[GlobalStyles.tagContainer, { marginHorizontal: 16 }]}>
         {TAGS.map((tag) => (
           <TouchableOpacity
             key={tag}
-            style={[styles.tag, selectedTag === tag && styles.selectedTag]}
+            style={[GlobalStyles.tag, selectedTag === tag && GlobalStyles.selectedTag]}
             onPress={() => setSelectedTag(tag)}
           >
-            <Text style={[styles.tagText, selectedTag === tag && styles.selectedTagText]}>
+            <Text style={[GlobalStyles.tagText, selectedTag === tag && GlobalStyles.selectedTagText]}>
               {tag}
             </Text>
           </TouchableOpacity>
@@ -91,8 +96,6 @@ export default function HomeScreen() {
             subtitle={`${restaurant.cuisine} - ${restaurant.location.city}`}
             restaurant={restaurant} // Pass the entire restaurant object
           />
-
-
         ))
       ) : (
         <ThemedText>No restaurants found.</ThemedText>
@@ -100,49 +103,3 @@ export default function HomeScreen() {
     </ParallaxScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-  cardsContainer: {
-    gap: 2,
-    marginBottom: 2,
-  },
-  headerImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  searchBar: {
-    padding: 10,
-    marginTop: 20,
-    borderRadius: 10,
-    marginHorizontal: 10,
-    backgroundColor: '#000',
-  },
-  tagContainer: {
-    marginVertical: 10,
-    paddingHorizontal: 10,
-  },
-  tag: {
-    padding: 8,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-  },
-  selectedTag: {
-    backgroundColor: '#FFE3CE',
-  },
-  tagText: {
-    color: '#000',
-    fontSize: 14,
-  },
-  selectedTagText: {
-    color: '#DF6800',
-    fontWeight: 'bold',
-  },
-});

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, TextInput, Switch, Button, View, Text, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react'; 
+import { StyleSheet, Image, TextInput, Switch, Button, View, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import useUserGet from '@/data/user-get';
 import useUserPut from '@/data/user-put';
+import GlobalStyles from '@/constants/GlobalStyles';
 
 export default function ProfileScreen() {
 
@@ -57,9 +57,6 @@ export default function ProfileScreen() {
         />
       }
     >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={styles.title}>Profile</ThemedText>
-      </ThemedView>
 
       <ScrollView style={styles.container}>
         {/* Profile Picture */}
@@ -68,25 +65,25 @@ export default function ProfileScreen() {
         </View>
 
         {/* Username */}
-        <View style={styles.fieldContainer}>
-          <ThemedText style={styles.label}>Username</ThemedText>
+        <View style={GlobalStyles.card}>
+          <ThemedText style={GlobalStyles.cardTitle}>Username</ThemedText>
           <TextInput
             value={username}
             onChangeText={setUsername}
-            style={styles.input}
+            style={GlobalStyles.cardSubtitle}
             placeholder="Enter your username"
           />
         </View>
 
         {/* Email (Non-editable) */}
-        <View style={styles.fieldContainer}>
-          <ThemedText style={styles.label}>Email</ThemedText>
-          <ThemedText style={styles.nonEditableField}>{data.email}</ThemedText>
+        <View style={GlobalStyles.card}>
+          <ThemedText style={GlobalStyles.cardTitle}>Email</ThemedText>
+          <ThemedText style={GlobalStyles.cardSubtitle}>{data.email}</ThemedText>
         </View>
 
         {/* Notifications Toggle (Fake) */}
-        <View style={styles.fieldContainer}>
-          <ThemedText style={styles.label}>Enable Notifications</ThemedText>
+        <View style={GlobalStyles.card}>
+          <ThemedText style={GlobalStyles.cardTitle}>Enable Notifications</ThemedText>
           <Switch
             value={notifications}
             onValueChange={setNotifications} // This won't be linked to anything
@@ -95,7 +92,7 @@ export default function ProfileScreen() {
 
         {/* Save and Log Out */}
         <View style={styles.buttonContainer}>
-          <Button title="Save Changes" onPress={handleSave} />
+          <Button title="Save Changes" onPress={handleSave}/>
           <Button title="Log Out" color="#FF6347" onPress={handleLogout} />
         </View>
       </ScrollView>
@@ -109,16 +106,6 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-    padding: 16,
-  },
-  title: {
-    fontFamily: 'SpaceGrotesk',
-    fontSize: 24,
-    color: '#FFF',
-  },
   container: {
     padding: 16,
   },
@@ -130,27 +117,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-  },
-  fieldContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    color: '#FFF',
-    marginBottom: 5,
-  },
-  input: {
-    backgroundColor: '#222',
-    color: '#FFF',
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#444',
-  },
-  nonEditableField: {
-    color: '#AAA',
-    fontSize: 16,
-    paddingVertical: 10,
   },
   buttonContainer: {
     marginTop: 20,
