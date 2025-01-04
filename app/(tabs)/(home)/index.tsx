@@ -39,6 +39,7 @@ export default function HomeScreen() {
   )?.filter((restaurant: any) => {
     // Filter by selected tag
     return selectedTag === 'All' || restaurant.tags?.includes(selectedTag);
+
   });
 
   if (isLoading || !restaurants) {

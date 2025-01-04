@@ -26,7 +26,8 @@ export default function TabLayout() {
   }
 
   return (
-    <Tabs screenOptions={{
+    <Tabs
+      screenOptions={{
         headerStyle: {
           backgroundColor: '#f4511e',
         },
@@ -34,7 +35,16 @@ export default function TabLayout() {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-      }}>
+        tabBarStyle: {
+          backgroundColor: '#1C1C1C',
+          height: 80,
+          paddingVertical: 5,
+        },
+        tabBarActiveTintColor: '#FF5722', // Active tab icon and label color
+        tabBarInactiveTintColor: '#AAA', // Inactive tab icon and label color
+        tabBarShowLabel: false,
+      }}
+    >
       <Tabs.Screen name="(home)" initialParams={{ userId }} options={{
         headerShown: false, title: 'Home', tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />

@@ -99,6 +99,9 @@ const GlobalStyles = StyleSheet.create({
     marginRight: 10,
     alignSelf: 'flex-start',
   },
+  selectedTag: {
+    backgroundColor: '#f4511e',
+  },
   tagText: {
     fontSize: 14,
     color: colors.primaryText,
