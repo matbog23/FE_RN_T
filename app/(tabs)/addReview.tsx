@@ -158,7 +158,7 @@ export default function AddReviewScreen() {
       <ParallaxScrollView
             headerBackgroundColor={{ light: '#121212', dark: '#151718' }}
           >
-      <ScrollView contentContainerStyle={[GlobalStyles.container, { flexGrow: 1}]}>
+      <ScrollView contentContainerStyle={[GlobalStyles.container, { flexGrow: 1 }]}>
         <View style={GlobalStyles.card}>
           <Text style={GlobalStyles.cardTitle}>Restaurant Name</Text>
           <TextInput

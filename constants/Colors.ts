@@ -9,7 +9,7 @@ const tintColorDark = '#FF5722';
 export const Colors = {
   light: {
     text: '#1A1A1A', // Darker for better contrast
-    background: '#FFFFFF',
+    background: '#151718', // Light gray background for light mode
     tint: tintColorLight,
     icon: '#444', // Slightly darker for visibility
     tabIconDefault: '#8C8C8C',
