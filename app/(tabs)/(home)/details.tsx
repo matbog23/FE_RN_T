@@ -44,7 +44,7 @@ const RestaurantDetailsScreen = () => {
       {/* Restaurant Information */}
       <Text style={GlobalStyles.sectionHeader}>Restaurant Information</Text>
       <View style={[GlobalStyles.card, styles.infoCard]}>
-        <Text style={GlobalStyles.cardTitle}>{restaurant.name}</Text>
+        <Text style={GlobalStyles.cardTitle}>{restaurant.name} - {restaurant.averageRating ? `⭐ ${restaurant.averageRating}` : 'No ratings yet'}</Text>
         <View style={styles.infoRow}>
           <Icon name="cutlery" size={16} color="#FFF" style={styles.infoIcon} />
           <Text style={GlobalStyles.cardSubtitle}>{restaurant.cuisine}</Text>

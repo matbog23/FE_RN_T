@@ -10,12 +10,11 @@ interface FoodCardProps {
   restaurant: any; // Pass the entire restaurant object
 }
 
-const FoodCard: React.FC<FoodCardProps> = ({ imageUrl, title, subtitle, restaurant }) => {
+const FoodCard: React.FC<FoodCardProps> = ({ imageUrl, title, subtitle, averageRating, restaurant }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    // Navigate to the details screen with the restaurant object as a parameter
-    navigation.navigate('details', { restaurant }); // Ensure 'restaurant' is being passed
+    navigation.navigate('details', { restaurant });
   };
 
   return (
@@ -24,6 +23,7 @@ const FoodCard: React.FC<FoodCardProps> = ({ imageUrl, title, subtitle, restaura
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
+          {averageRating !== null && <Text style={styles.averageRating}>⭐ {averageRating}</Text>}
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -65,6 +65,12 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: '#fff',
+  },
+  averageRating: {
+    color: '#FFD700',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginTop: 5,
   },
 });
 
